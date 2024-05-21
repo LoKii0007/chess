@@ -20,5 +20,9 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "chess.js": "^1.0.0-beta.8",
+    "prisma": "^5.14.0"
+  }
 }
