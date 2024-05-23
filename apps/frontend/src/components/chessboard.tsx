@@ -1,8 +1,8 @@
 import { Square, PieceSymbol, Color } from 'chess.js'
 import { useState } from 'react'
 import { Move } from './gamePage'
-import MoveTable from './MoveTable'
 import { MOVE } from './message'
+import toast from 'react-hot-toast'
 
 export default function Chessboard({playerColor,  board, socket, chess, setBoard, moves, setMoves }:
     {
@@ -28,6 +28,8 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
 
     const [from, setFrom] = useState<null | Square>(null)
     const [to, setTo] = useState<null | Square>(null)
+    const [isValid, setIsValid] = useState<false | true>(true)
+    const [selectedSquare, setSelectedSquare] = useState<false | true>(false)
 
     // const isMyTurn = myColor === chess.turn()
     const isMyTurn = playerColor === chess.turn()
@@ -39,22 +41,38 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
                     return <div className='flex' key={i}>
                         {row.map((square, j) => {
                             const squareRepresentation = String.fromCharCode(97 + (j % 8)) + "" + (8 - i) as Square
+                            // console.log(squareRepresentation)
                             return <div 
                                 onClick={() => {
+                                    // console.log('from ',from)
+                                    // console.log('sq ', squareRepresentation)
+                                    console.log('color : ', square?.color)
                                     if (!from && square?.color !== chess.turn()) {
                                         return
                                     }
                                     if (!isMyTurn) {
                                         return
                                     }
-                                    if (from === squareRepresentation) {
+                                    if (from === squareRepresentation ) {
                                         setFrom(null)
+                                    }
+                                    //update this
+                                    if(from && square?.color === playerColor && square.type ){
+                                        console.log('sq color' , square?.color)
+                                        console.log('plr color' , playerColor)
+                                        console.log('sq type ' , square?.type)
+                                        setFrom(squareRepresentation)
                                     }
                                     if (!from) {
                                         setFrom(squareRepresentation)
-                                    } else {
+                                        setIsValid(true)
+                                        console.log(from)
+                                    } 
+                                    else if(from && square?.color === undefined || from && square?.color !== playerColor ){
                                         try {
+                                            console.log('testing move')
                                             setTo(squareRepresentation)
+                                            // console.log('to', to)
                                             socket.send(JSON.stringify({
                                                 type: MOVE,
                                                 payload: {
@@ -64,7 +82,6 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
                                                     }
                                                 }
                                             }))
-                                            setFrom(null)
                                             chess.move({
                                                 from,
                                                 to: squareRepresentation
@@ -75,16 +92,18 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
                                                 to: squareRepresentation
                                             })
                                             setMoves(moves => [...moves, { from, to: squareRepresentation }])
+                                            setFrom(null)
                                         } catch (error) {
-                                            console.error(error)
+                                            setIsValid(false)
+                                            toast.error('invalid move')
+                                            // console.log(error)
                                         }
                                     }
                                 }}
-                                key={j} className={`w-16 h-16 ${(i + j) % 2 === 0 ? "bg-[#75A47F]" : "bg-white"}`}>
+                                key={j} className={`w-16 h-16 ${(i + j) % 2 === 0 ? "bg-[#75A47F]" : "bg-white"} ${selectedSquare ? selectedSquare : null} `}>
                                 <div className="flex felx-col justify-center h-full">
-                                    {square?.type === 'p' && i===1 && <img src="/bp.png" alt="" /> }
-                                    {i===0 && <img src="/bp.png" alt="" /> }
-                                    {square?.type === 'p' && i===6 && <img src="/wp.png" alt="" /> }
+                                    {square ? <img src={`/b${square?.color==='b' && square?.type}.png`} alt="" />: null }
+                                    {square ? <img src={`/w${square?.color==='w' && square?.type}.png`} alt="" />: null }
                                 </div>
                             </div>
                         })}

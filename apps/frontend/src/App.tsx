@@ -2,6 +2,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Landing from './components/landing'
 import GamePage from './components/gamePage'
+import { Toaster } from 'react-hot-toast'
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
           <Route path='/' element={<Landing/>} > </Route>
           <Route path='/game/:gameId' element={<GamePage/>} > </Route>
         </Routes>
+        <Toaster/>
       </BrowserRouter>
     </>
   )
