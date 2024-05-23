@@ -1,18 +1,18 @@
-
 import { useNavigate } from 'react-router-dom'
+import '../css/landing.css'
 
 const Landing = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   return (
     <>
-          <div className="chess h-[100vh] w-[100vw] flex flex-row justify-evenly items-center">
-          <div className="chess-left">
-          <img src="/chess.png" className='w-[40vw] h-[70vh]' alt="" />
-          </div>
-          <div className="chess-right w-[40vw] h-full flex flex-col justify-center items-center">
-            <h1 className='py-5' >Play chess online</h1>
-          <button onClick={() =>navigate(`/game/random`,)} className='text-2xl bg-green-400 p-5'>Join game</button>
-          </div>
+      <div className="chess h-[100vh] w-[100vw] flex flex-row justify-center items-center">
+        <div className="chess-left">
+          <img src="/chessboard.png" className='h-[70vh]' alt="" />
+        </div>
+        <div className="chess-right w-[40vw] h-full flex flex-col justify-center items-center">
+          <h1 className='py-5 text-[50px] text-white text-center font-[600] ' >Play chess <br /> online</h1>
+          <button onClick={() => navigate(`/game/random`,)} className='text-2xl rounded-full play-btn p-5 px-12 text-white'>Play Online</button>
+        </div>
       </div>
     </>
   )

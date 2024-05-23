@@ -1,22 +1,23 @@
-import { div } from "three/examples/jsm/nodes/Nodes.js"
-
-export default function MoveTable(moves:any) {
+export default function MoveTable(moves: any) {
   const index = moves.moves.length
   return (
     <>
-      moves table <br />
-
-      {
-        index>0?<div>
-          {moves.moves.slice(index-1).map((move : any , i : any)=>{
-            return(
-              <div  key={i} >
-                from : {move.from}, to : {move.to}
-              </div>
-            )
-          })}
-          </div>:""
-      }
+      <div className="movetable text-center text-white text-2xl w-[30vw]">
+        <div className="move-top">
+        moves table
+        </div>
+        {
+          index > 0 && <div>
+            {moves.moves.slice(index - 1).map((move: any, i: any) => {
+              return (
+                <div key={i} >
+                   Recent move - From : {move.from} To : {move.to}
+                </div>
+              )
+            })}
+          </div>
+        }
+      </div>
     </>
   )
 }

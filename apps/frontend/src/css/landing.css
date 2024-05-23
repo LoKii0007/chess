@@ -1,0 +1,13 @@
+.chess{
+    background-color: #232528e8;
+}
+
+.play-btn{
+    background-color: #97BE5A;
+    transition: .5s ease-in-out;
+}
+
+.play-btn:hover{
+    background-color: #a7dc52;
+    transition: .5s ease-in-out;
+}

@@ -34,9 +34,6 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
 
     return (
         <div className="flex">
-            <div className="mr-10">
-                {moves.length > 0 && <div className="mt-4"> <MoveTable moves={moves} /> </div>}
-            </div>
             <div className='text-white-200'>
                 {board.map((row, i) => {
                     return <div className='flex' key={i}>
@@ -83,9 +80,11 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
                                         }
                                     }
                                 }}
-                                key={j} className={`w-16 h-16 ${(i + j) % 2 === 0 ? "bg-green-500" : "bg-white"}`}>
+                                key={j} className={`w-16 h-16 ${(i + j) % 2 === 0 ? "bg-[#75A47F]" : "bg-white"}`}>
                                 <div className="flex felx-col justify-center h-full">
-                                    {square ? square?.type : ""}
+                                    {square?.type === 'p' && i===1 && <img src="/bp.png" alt="" /> }
+                                    {i===0 && <img src="/bp.png" alt="" /> }
+                                    {square?.type === 'p' && i===6 && <img src="/wp.png" alt="" /> }
                                 </div>
                             </div>
                         })}
