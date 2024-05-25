@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
 const UseSocket = () => {
-//   const WS_URL = "ws://localhost:8080"
-  const WS_URL = "https://chess-ws.vercel.app/"
+  const WS_URL = "ws://localhost:8080"
+//   const WS_URL = "https://chess-ws.vercel.app/"
   const [socket ,setSocket] = useState<WebSocket | null>(null)
 
   useEffect(()=>{
