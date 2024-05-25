@@ -1,6 +1,6 @@
 import { Chess } from "chess.js";
 import { WebSocket } from "ws";
-import { GAME_OVER, INIT_GAME, MOVE } from "./message";
+import { CHECKMATE, GAME_OVER, INIT_GAME, MOVE } from "./message";
 import { db } from "./db";
 import {randomUUID} from 'crypto'
 
@@ -47,7 +47,7 @@ export class Game{
     //     try {
     //         await this.createGameInDb()
     //     } catch (error) {
-    //         console.error(error)
+    //         console.log(error)
     //     }
 
     //     const users = await db.user.findMany({
@@ -62,7 +62,7 @@ export class Game{
     //         this.player1.socket.send(JSON.stringify({
     //             type : INIT_GAME,
     //             payload :{
-    //                 color : 'white',
+    //                 color : 'w',
     //                 gameId :this.gameId,
     //                 whitePlayer :{name : users.find(user => user.id == this.player1.id)?.name , id : this.player1.id },
     //                 blackPlayer :{ name :users.find(user => user.id == this.player2.id)?.name, id : this.player2.id },
@@ -142,6 +142,16 @@ export class Game{
             return
         }
 
+        if(this.board.isCheck()){
+            this.player1.socket.send(JSON.stringify({
+                type : CHECKMATE
+            }))
+        
+            this.player2.socket.send(JSON.stringify({
+                type : CHECKMATE
+            }))
+        }
+
         //send the updated board
         if(this.moveCount %2 === 0){
             console.log("p1 ne chal diya")
@@ -160,29 +170,29 @@ export class Game{
         console.log("movecount : ", this.moveCount)
     }
 
-    // async createGameInDb (){
-    //     const game = await db.game.create({
-    //         data : {
-    //             id : this.gameId,
-    //             timeControl : "CLASSICAL",
-    //             status : "IN_PROGRESS",
-    //             currentFen : "rnbqkbnr/pppppppp/8/8/8/8/pppppppp/RNBQKBNR w KQkq - 0 1",
-    //             whitePlayer : {
-    //                 connect : {
-    //                     id : this.player1.id
-    //                 }
-    //             },
-    //             blackPlayer : {
-    //                 connect : {
-    //                     id : this.player2.id
-    //                 }
-    //             }
-    //         },
-    //         include : {
-    //             whitePlayer : true,
-    //             blackPlayer : true  
-    //         }
-    //     })
-    //     this.gameId = game.id
-    // }
+    async createGameInDb (){
+        const game = await db.game.create({
+            data : {
+                id : this.gameId,
+                timeControl : "CLASSICAL",
+                status : "IN_PROGRESS",
+                currentFen : "rnbqkbnr/pppppppp/8/8/8/8/pppppppp/RNBQKBNR w KQkq - 0 1",
+                whitePlayer : {
+                    connect : {
+                        id : this.player1.id
+                    }
+                },
+                blackPlayer : {
+                    connect : {
+                        id : this.player2.id
+                    }
+                }
+            },
+            include : {
+                whitePlayer : true,
+                blackPlayer : true  
+            }
+        })
+        // this.gameId = game.id
+    }
 }

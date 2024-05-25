@@ -11,3 +11,7 @@
     background-color: #a7dc52;
     transition: .5s ease-in-out;
 }
+
+.selected-square{
+    border: 5px solid yellow;
+}

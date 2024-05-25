@@ -1,8 +1,9 @@
 import { Square, PieceSymbol, Color } from 'chess.js'
 import { useState } from 'react'
-import { Move } from './gamePage'
+import { Move } from '../screens/gamePage'
 import { MOVE } from './message'
 import toast from 'react-hot-toast'
+import '../css/landing.css'
 
 export default function Chessboard({playerColor,  board, socket, chess, setBoard, moves, setMoves }:
     {
@@ -58,19 +59,19 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
                                     }
                                     //update this
                                     if(from && square?.color === playerColor && square.type ){
-                                        console.log('sq color' , square?.color)
-                                        console.log('plr color' , playerColor)
-                                        console.log('sq type ' , square?.type)
+                                        // console.log('sq color' , square?.color)
+                                        // console.log('plr color' , playerColor)
+                                        // console.log('sq type ' , square?.type)
                                         setFrom(squareRepresentation)
                                     }
                                     if (!from) {
                                         setFrom(squareRepresentation)
                                         setIsValid(true)
-                                        console.log(from)
+                                        // console.log(from)
                                     } 
                                     else if(from && square?.color === undefined || from && square?.color !== playerColor ){
                                         try {
-                                            console.log('testing move')
+                                            // console.log('testing move')
                                             setTo(squareRepresentation)
                                             // console.log('to', to)
                                             socket.send(JSON.stringify({
@@ -100,7 +101,7 @@ export default function Chessboard({playerColor,  board, socket, chess, setBoard
                                         }
                                     }
                                 }}
-                                key={j} className={`w-16 h-16 ${(i + j) % 2 === 0 ? "bg-[#75A47F]" : "bg-white"} ${selectedSquare ? selectedSquare : null} `}>
+                                key={j} className={`w-20 h-20 ${(i + j) % 2 === 0 ? "bg-[#75A47F]" : "bg-white"} ${from === squareRepresentation && 'selected-square' } `}>
                                 <div className="flex felx-col justify-center h-full">
                                     {square ? <img src={`/b${square?.color==='b' && square?.type}.png`} alt="" />: null }
                                     {square ? <img src={`/w${square?.color==='w' && square?.type}.png`} alt="" />: null }

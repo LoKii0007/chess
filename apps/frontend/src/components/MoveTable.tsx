@@ -2,8 +2,8 @@ export default function MoveTable(moves: any) {
   const index = moves.moves.length
   return (
     <>
-      <div className="movetable text-center text-white text-2xl w-[30vw]">
-        <div className="move-top">
+      <div className="movetable text-center text-white text-2xl w-[30vw] ">
+        <div className="move-top pb-5">
         moves table
         </div>
         {

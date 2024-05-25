@@ -5,7 +5,7 @@ const Landing = () => {
   const navigate = useNavigate()
   return (
     <>
-      <div className="chess h-[100vh] w-[100vw] flex flex-row justify-center items-center">
+      <div className="chess h-[92vh] flex flex-row justify-center items-center">
         <div className="chess-left">
           <img src="/chessboard.png" className='h-[70vh]' alt="" />
         </div>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import Chessboard from './chessboard'
+import Chessboard from '../components/chessboard'
 import UseSocket from '../hooks/useSocket'
 import { Chess, Square } from 'chess.js'
 import { useNavigate, useParams } from 'react-router-dom'
-import { GAME_OVER, INIT_GAME, MOVE, OPPONENT_DISCONNECTED } from './message'
-import MoveTable from './MoveTable'
+import { CHECKMATE, GAME_OVER, INIT_GAME, MOVE, OPPONENT_DISCONNECTED } from '../components/message'
+import MoveTable from '../components/MoveTable'
 import '../css/landing.css'
+import toast from 'react-hot-toast'
 
 export interface Move {
   from: Square,
@@ -38,6 +39,8 @@ export default function GamePage() {
   const [playerColor, setPlayerColor] = useState<'b' | 'w'>()
   const [result, setResult] = useState<"WHITE_WINS" | "BLACK_WINS" | "DRAW" | typeof OPPONENT_DISCONNECTED | null>(null)
 
+  // const
+
   useEffect(() => {
     if (!socket) {
       return
@@ -66,6 +69,12 @@ export default function GamePage() {
           // console.log("move made")
           break;
 
+        case CHECKMATE:
+          // handleCheckmate()
+          console.log('check')
+          toast.error('check by opponent')
+          break
+
         case GAME_OVER:
           console.log("game over")
           setResult(message.payload.result)
@@ -74,10 +83,13 @@ export default function GamePage() {
         case OPPONENT_DISCONNECTED:
           setResult(OPPONENT_DISCONNECTED)
           break
-
       }
     }
   }, [socket, chess])
+
+  const handlePlayOnline = () => {
+    setStarted(true)
+  }
 
   if (!socket) {
     return <div className='text-center'>connecting...</div>
@@ -87,31 +99,39 @@ export default function GamePage() {
 
   return (
     <div className='gamePage bg-[#232528e8] h-[100vh] flex flex-col justify-evenly '>
-      {/* {result && 
-      <div className="win text-center">
-        {result}
-      </div>} */}
-
       <div className="gamePage-top text-center text-white text-3xl ">
         <div className="player-names">
           {gameMetadata?.blackPlayer.name} &nbsp; {gameId !== 'random' && 'vs'} &nbsp;  {gameMetadata?.whitePlayer.name} <br />
         </div>
-        <div className="turn pt-3">
-          {gameId !== 'random' && <div>{chess.turn() === playerColor ? <div className=' text-green-600'>Your Turn</div> : <div className=' text-red-600'>Opponent's Turn</div>}</div> }
-        </div>
+        {result &&
+          <div className="win text-center">
+            {result}
+          </div>}
       </div>
 
       <div className="gamePage-bottom flex justify-center items-center">
-        <div className="chessboard px-12">
+        <div className="chessboard p-5">
           <Chessboard moves={moves} playerColor={playerColor} setMoves={setMoves} chess={chess} board={board} setBoard={setBoard} socket={socket} />
         </div>
-        <div className="game-details px-12">
-          {gameId === 'random' && <button onClick={() => {
+
+        <div className="game-details p-12 flex flex-col justify-evenly items-center">
+          {!started && <button onClick={() => {
             socket.send(JSON.stringify({
               type: INIT_GAME
             }))
+            handlePlayOnline()
           }} className='p-5 play-btn px-12 rounded-full '>play game</button>}
 
+          <div className="turn text-4xl py-5">
+            {gameId !== 'random' && <div>{chess.turn() === playerColor ? <div className=' text-green-600'>Your Turn</div> : <div className=' text-red-600'>Opponent's Turn</div>}</div>}
+          </div>
+
+          {started && gameId === 'random' && <div className='text-white text-xl'>waiting for oppponent...</div>}
+
+          <div className='text-center text-white text-2xl pb-5'>
+            {gameId !== 'random' && playerColor === 'b' ? 'Black Player' : 'White Player'}
+          </div>
+          
           {gameId !== 'random' && <MoveTable moves={moves} />}
         </div>
 

@@ -8,14 +8,12 @@ import { User } from "./socketManager"
 export class Gamemanager{
     private games : Game[]
     private users: User[]
-    private pendingUser : WebSocket | null
     private pendingUser2 : User | null
     private pendingGameId : string | null
 
     constructor(){
         this.games = []
         this.users = []
-        this.pendingUser = null
         this.pendingUser2 = null
         this.pendingGameId = null
     }
@@ -36,6 +34,8 @@ export class Gamemanager{
                     console.log("doosra user bhi aa gaya game start")
                     const game = new Game({id :this.pendingUser2.id , socket : this.pendingUser2.socket} , {id : user.id, socket : user.socket} )
                     this.games.push(game)
+                    // creating game in database
+                    // game.createGameInDb()
                     this.pendingUser2 = null
                     // this.pendingGameId = null
                 }else{
